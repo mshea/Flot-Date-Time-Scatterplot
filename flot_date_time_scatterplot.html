@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Flot Scatter Graph</title>
+ 
+<style type="text/css">
+body { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
+#placeholder { width: 800px; height: 400px; }
+</style>
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js""></script>
+
+<!-- download your own copies of the following scripts -->
+<script type="text/javascript" language="javascript" src="http://mikeshea.net/lifetracker/jquery.flot.js"></script>
+<script src="https://raw.github.com/flot/flot/master/jquery.flot.time.js"></script>
+
+
+<script type="text/javascript">
+// Insert your own timestamps here in the format "YYYY-MM-DDTHH:MM:SS".
+// One dot will be added for each point
+
+var d1 = ['2010-11-04T22:19:18','2010-11-04T22:22:35',];
+
+var datesTimes = [];
+
+for (x=0;x<d1.length;x++) {
+	myHour = new Date(d1[x]).getHours();
+	myMinute = (new Date(d1[x]).getMinutes()/60);
+	mySecond = (new Date(d1[x]).getSeconds()/60)/100;
+	myTime = myHour+myMinute+mySecond;
+	datesTimes.push([new Date(d1[x]),myTime]);
+}
+
+console.log(x);
+
+d1 = datesTimes;
+ 
+$(document).ready(function() {
+    $.plot($("#placeholder"), [d1], {
+        series: {
+            points: {
+                radius: .1,
+                show: true,
+                fill: true,
+                fillColor:"#058DC7"
+            },
+            color: "#058DC7"
+        },
+        yaxis: {ticks: [[0,"12 am"],[2,"2 am"],[4,"4 am"],[6,"6 am"],[8,"8 am"],[10,"10 am"],[12,"12 pm"],[14,"2 pm"],[16,"4 pm"],[18,"6 pm"],[20,"8 pm"],[22,"10 pm"],[24,"12 am"]],
+        	},     xaxis: {
+                mode: "time",
+                TickSize: [1, "month"],
+                 max: Date.UTC(2014,2, 0, 0, 0),
+            },        grid: {color: '#ddd', borderWidth: 0}
+    });
+});
+</script>
+</head>
+ 
+<body>
+<div id="placeholder"></div>
+</body>
+</html>
