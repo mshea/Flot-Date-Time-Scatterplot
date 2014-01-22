@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Flot Scatter Graph</title>
- 
+
 <style type="text/css">
 body { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
 #placeholder { width: 800px; height: 400px; }
@@ -16,29 +16,45 @@ body { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
 <script type="text/javascript" language="javascript" src="http://mikeshea.net/lifetracker/jquery.flot.js"></script>
 <script src="https://raw.github.com/flot/flot/master/jquery.flot.time.js"></script>
 
-
 <script type="text/javascript">
-// Insert your own timestamps here in the format "YYYY-MM-DDTHH:MM:SS".
-// One dot will be added for each point
 
-var d1 = ['2010-11-04T22:19:18','2010-11-04T22:22:35',];
+$.get("data.txt", function(rawData) {
 
-var datesTimes = [];
-
-for (x=0;x<d1.length;x++) {
-	myHour = new Date(d1[x]).getHours();
-	myMinute = (new Date(d1[x]).getMinutes()/60);
-	mySecond = (new Date(d1[x]).getSeconds()/60)/100;
-	myTime = myHour+myMinute+mySecond;
-	datesTimes.push([new Date(d1[x]),myTime]);
+if (rawData.indexOf("\n\n") != -1) {
+	var totalData = rawData.split("\n\n");
+} else {
+	var totalData = ([rawData]);
 }
 
-console.log(x);
+// now I have multiple datasets in a single array.
+console.log(totalData.length + " total sets found");
 
-d1 = datesTimes;
- 
+// This is where the final XY sets will go.
+totalXYData = [];
+
+for (var a = 0; a<totalData.length; a++) {
+	newData = totalData[a].split('\n');
+	dataLabel = newData[0];
+	newXYSet = buildXYSet(newData);
+	totalXYData.push({label: dataLabel, data: newXYSet});
+	console.log("Output run "+a);
+}
+console.log(totalXYData);
+
+function buildXYSet(timestamps) {
+	XYdata = [];
+	for (i=1;i<timestamps.length;i++) {
+		myDate = new Date(timestamps[i]);
+		myHour = new Date(timestamps[i]).getHours();
+		myMinute = (new Date(timestamps[i]).getMinutes()/60);
+		mySecond = (new Date(timestamps[i]).getSeconds()/60)/100;
+		XYdata.push([myDate, myHour+myMinute+mySecond]);
+	}
+	return XYdata;
+}
+
 $(document).ready(function() {
-    $.plot($("#placeholder"), [d1], {
+    $.plot($("#placeholder"), totalXYData, {
         series: {
             points: {
                 radius: .1,
@@ -46,19 +62,23 @@ $(document).ready(function() {
                 fill: true,
                 fillColor:"#058DC7"
             },
-            color: "#058DC7"
         },
+
+        colors: ["#058DC7", "#dba255", "#919733"],
         yaxis: {ticks: [[0,"12 am"],[2,"2 am"],[4,"4 am"],[6,"6 am"],[8,"8 am"],[10,"10 am"],[12,"12 pm"],[14,"2 pm"],[16,"4 pm"],[18,"6 pm"],[20,"8 pm"],[22,"10 pm"],[24,"12 am"]],
         	},     xaxis: {
                 mode: "time",
                 TickSize: [1, "month"],
-                 max: Date.UTC(2014,2, 0, 0, 0),
+//                 min: Date.UTC(2012,12, 0, 0, 0),
+//                 max: Date.UTC(2013,12, 31, 0, 0),
             },        grid: {color: '#ddd', borderWidth: 0}
     });
 });
+});
+
 </script>
 </head>
- 
+
 <body>
 <div id="placeholder"></div>
 </body>
