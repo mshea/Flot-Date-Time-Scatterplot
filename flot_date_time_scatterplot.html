@@ -53,7 +53,6 @@ function buildXYSet(timestamps) {
 	return XYdata;
 }
 
-$(document).ready(function() {
     $.plot($("#placeholder"), totalXYData, {
         series: {
             points: {
@@ -73,7 +72,6 @@ $(document).ready(function() {
 //                 max: Date.UTC(2013,12, 31, 0, 0),
             },        grid: {color: '#ddd', borderWidth: 0}
     });
-});
 });
 
 </script>
